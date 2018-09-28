@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\Access\AuthorizationException ;
 
 class Handler extends ExceptionHandler
 {
@@ -48,6 +49,16 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ( ! strpos ( url()->current(),'api')) {
+            if ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
+
+                $msg = '您没有操作权限!';
+                if ($request->expectsJson()) {
+                    return response()->json(['message' => $msg, 'status_code' => 403], 403);
+                }
+                return response()->view('pages.error', ['msg' => $msg]);
+            }
+        }
         return parent::render($request, $exception);
     }
 }
