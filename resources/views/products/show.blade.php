@@ -67,6 +67,22 @@
                 $('.product-info .price span').text($(this).data('price'));
                 $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
             });
+
+            //监听点击收藏按钮
+            $(".btn-favor").click(function () {
+                axios.post('{{ route('products.favor', ['product' => $product->id]) }}')
+                    .then(function () {
+                           swal('操作成功','','success');
+                    },function (error) {
+                          if (error.response && error.response.status === 401) {
+                              swal('请先登录','','error');
+                          } else if (error.response && error.response.msg) {
+                              swal(error.response.msg,'','error');
+                          } else {
+                              swal('系统错误','','error');
+                          }
+                    });
+            });
         });
     </script>
 @endsection

@@ -34,4 +34,10 @@ class Product extends Model
         }
         return \Storage::disk('public')->url($this->attributes['image']);
     }
+    public function productsFavorite()
+    {
+        return $this->belongsToMany(User::class,'user_favorite_products')
+            ->withTimestamps()
+            ->orderBy('user_favorite_products.created_at','desc');
+    }
 }

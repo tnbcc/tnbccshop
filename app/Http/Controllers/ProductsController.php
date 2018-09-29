@@ -46,4 +46,21 @@ class ProductsController extends Controller
         }
         return view('products.show',compact('product'));
     }
+
+    public function favor(Request $request,Product $product)
+    {
+        $user = $request->user();
+        if ($user->favoriteProducts()->find($product->id)) {
+            return [];
+        }
+        $user->favoriteProducts()->attach($product);
+        return [];
+    }
+
+    public function disfavor(Request $request,Product $product)
+    {
+        $user = $request->user();
+        $user->favoriteProducts()->detach($product);
+        return [];
+    }
 }
